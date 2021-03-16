@@ -3,16 +3,16 @@ version: '3'
 services:
   node1:
     build: ./nodejs
-    ports: '-"81:3000"'
+    ports: -"81:3000"
   node2:
     build: ./nodejs
-    ports: '-"82:3000"'
+    ports: -"82:3000"
   node3:
     build: ./nodejs
-    ports: '-"83:3000"'
+    ports: -"83:3000"
   nginx:
     build: ./nginx
-    ports: '-"80:80"'
+    ports: -"80:80"
     depends_on: 
      -node1 
      -node2 
