@@ -1,10 +1,14 @@
+// NOTE: Need to get this API working - may need to add the _id
 GET http://192.168.91.3:81
 ###
 POST http://192.168.91.3:81 HTTP/1.1
 content-type: application/json
 {
- "_id": 8,
- "item": "Marathon Bar",
- "price": 0.9,
- "quantity": 20
+    "accountId": "3", 
+    "userName": "John Cena", 
+    "titleId": "2", 
+    "userAction": "3",
+    "dateAndTime": "22/03/2021",
+    "pointOfInteraction": "2440",
+    "typeOfInteraction": "pause"
 }
