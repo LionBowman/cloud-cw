@@ -23,7 +23,7 @@ db.analytics.insertMany([
     'typeOfInteraction': 'stop'
   }
 ]);
-// NOTE: need to see if I need an '_id' in the schema? 
+// NOTE: need to see if I need an '_id' in the schema to stop it auto-generating? 
 use('NotFlixDB');
 db.getCollection('analytics')
  .find();

@@ -51,7 +51,7 @@ var analyticsModel = mongoose.model('analytics', analyticsSchema, 'analytics');
 
 
 app.get('/', (req, res) => {
-  analyticsModel.find({},'item price quantity lastName', (err, analytics) => {
+  analyticsModel.find({},'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction', (err, analytics) => {
     if(err) return handleError(err);
     res.send(JSON.stringify(analytics))
   }) 
