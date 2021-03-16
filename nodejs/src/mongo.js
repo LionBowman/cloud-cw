@@ -16,7 +16,7 @@ const app = express()
 const port = 3000
 
 //connection string listing the mongo servers. This is an alternative to using a load balancer. THIS SHOULD BE DISCUSSED IN YOUR ASSIGNMENT.
-const connectionString = 'mongodb://localmongo1:27017,localmongo2:27017,localmongo3:27017/sweetShopDB?replicaSet=cfgrs';
+const connectionString = 'mongodb://localmongo1:27017,localmongo2:27017,localmongo3:27017/notFlixDB?replicaSet=cfgrs';
 
 setInterval(function() {
 
@@ -37,13 +37,16 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 var Schema = mongoose.Schema;
 
 var stockSchema = new Schema({
-  _id: Number,
-  item: String,
-  price: Number,
-  quantity: Number
+  accountId: String, 
+  userName: String, 
+  titleId: String, 
+  userAction: String,
+  dateAndTime: String,
+  pointOfInteraction: String,
+  typeOfInteraction: String
 });
 
-var stockModel = mongoose.model('Stock', stockSchema, 'stock');
+var stockModel = mongoose.model('analytics', stockSchema, 'analytics');
 
 
 
