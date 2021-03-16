@@ -17,8 +17,7 @@ services:
      -node1 
      -node2 
      -node3
-# RabbitMQ Node cluster - Week 5 Repo
-services:
+# RabbitMQ cluster - Week 5 Repo
   stats:
     image: bitnami/rabbitmq
     environment:
@@ -60,15 +59,7 @@ services:
     ports:
       - '15672:15672'
       - '5672:5672'
-volumes:
-  rabbitmqstats_data:
-    driver: local
-  rabbitmqdisc1_data:
-    driver: local
-  rabbitmqram1_data:
-    driver: local
-# MongoDB cluster - Week ...
-services:
+# MongoDB cluster - Week 6
   mongo1:
     hostname: mongo1
     container_name: localmongo1
@@ -103,8 +94,13 @@ services:
       - ./scripts:/scripts
     restart: "no"
     entrypoint: [ "bash", "/scripts/mongo_setup.sh"]
-  node1:
-    build: ./nodejs
-    ports:
-      - "81:3000"
+
+volumes:
+  rabbitmqstats_data:
+    driver: local
+  rabbitmqdisc1_data:
+    driver: local
+  rabbitmqram1_data:
+    driver: local
+  
 
