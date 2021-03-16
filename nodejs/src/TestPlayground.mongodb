@@ -1,0 +1,29 @@
+use('NotFlixDB');
+// The drop() command destroys all data from a collection.
+// Make sure you run it against the correct database and collection.
+db.analytics.drop();
+// Insert a few documents into the analytics collection.
+db.analytics.insertMany([
+ { 
+    'accountId': '1', 
+    'userName': 'Jacky Chan', 
+    'titleId': '1', 
+    'userAction': '1',
+    'dateAndTime': '12/03/2021',
+    'pointOfInteraction': '1440',
+    'typeOfInteraction': 'play'
+  },
+  { 
+    'accountId': '2', 
+    'userName': 'Bruce Lee', 
+    'titleId': '1', 
+    'userAction': '4',
+    'dateAndTime': '21/03/2021',
+    'pointOfInteraction': '1440',
+    'typeOfInteraction': 'stop'
+  }
+]);
+// NOTE: need to see if I need an '_id' in the schema? 
+use('NotFlixDB');
+db.getCollection('analytics')
+ .find();
