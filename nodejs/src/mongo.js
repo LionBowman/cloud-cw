@@ -36,7 +36,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var Schema = mongoose.Schema;
 
-var stockSchema = new Schema({
+var analyticsSchema = new Schema({
   accountId: String, 
   userName: String, 
   titleId: String, 
@@ -46,24 +46,24 @@ var stockSchema = new Schema({
   typeOfInteraction: String
 });
 
-var stockModel = mongoose.model('analytics', stockSchema, 'analytics');
+var analyticsModel = mongoose.model('analytics', analyticsSchema, 'analytics');
 
 
 
 app.get('/', (req, res) => {
-  stockModel.find({},'item price quantity lastName', (err, stock) => {
+  analyticsModel.find({},'item price quantity lastName', (err, analytics) => {
     if(err) return handleError(err);
-    res.send(JSON.stringify(stock))
+    res.send(JSON.stringify(analytics))
   }) 
 })
 
-app.post('/',  (req, res) => {
-  var awesome_instance = new SomeModel(req.body);
-  awesome_instance.save(function (err) {
+app.post('/', (req, res) => {
+  var new_analytics_instance = new analyticsModel(req.body);
+  new_analytics_instance.save(function (err) {
   if (err) res.send('Error');
-    res.send(JSON.stringify(req.body))
+  res.send(JSON.stringify(req.body))
   });
-})
+ })
 
 app.put('/',  (req, res) => {
   res.send('Got a PUT request at /')
