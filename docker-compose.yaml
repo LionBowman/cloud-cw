@@ -53,6 +53,7 @@ services:
     depends_on:
       - stats
   haproxy:
+    container_name: RabbitMQ-LB
     image: 'haproxy:1.7'
     volumes:
       - './haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro'

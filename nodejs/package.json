@@ -1,0 +1,24 @@
+{
+  "name": "cloud-cw",
+  "version": "1.0.0",
+  "description": "// Add instructions here ...",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LionBowman/cloud-cw.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LionBowman/cloud-cw/issues"
+  },
+  "homepage": "https://github.com/LionBowman/cloud-cw#readme",
+  "dependencies": {
+    "amqplib": "^0.7.1",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.2"
+  }
+}
