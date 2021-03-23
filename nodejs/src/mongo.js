@@ -29,14 +29,12 @@ var analyticsModel = mongoose.model('analytics', analyticsSchema, 'analytics');
 
 function getAll() {  
   return analyticsModel.find({}, 'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction', (err, analytics) => {
-    console.log(analytics);  
     if(err) return err;
       return analytics
     }) 
 }
 
 function postAll(model) {
-  console.log(model);
   var new_analytics_instance = new analyticsModel(model);
   return new_analytics_instance.save(function (err) {
   if (err) return err;

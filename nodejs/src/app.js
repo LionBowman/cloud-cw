@@ -11,11 +11,11 @@ const port = 3000
 app.use(express.json());
 
 app.get('/', (_, res) => {
-    res.send(mongo.getAll());
+    res.json(mongo.getAll());
 })
   
 app.post('/', (req, res) => {
-    res.send(mongo.postAll(req.body));
+    res.json(mongo.postAll(req.body));
 })
 
 //bind the express web service to the port specified

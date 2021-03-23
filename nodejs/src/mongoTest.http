@@ -1,5 +1,6 @@
 // NOTE: Need to get this API working - may need to add the _id
 GET http://192.168.91.3:81
+content-type: application/json
 ###
 POST http://192.168.91.3:81 HTTP/1.1
 content-type: application/json
