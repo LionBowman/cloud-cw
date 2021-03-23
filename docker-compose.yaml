@@ -72,6 +72,8 @@ services:
       - "40001:27017"
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+    volumes:
+      - /mongo1-data:/data/db
   mongo2:
     hostname: mongo2
     container_name: localmongo2
@@ -80,6 +82,8 @@ services:
       - "40002:27017"
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+    volumes:
+      - /mongo2-data:/data/db
   mongo3:
     hostname: mongo3
     container_name: localmongo3
@@ -88,6 +92,8 @@ services:
       - "40003:27017"
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+    volumes:
+      - /mongo3-data:/data/db
   mongosetup:
     image: mongo:4.0-xenial
     depends_on:
@@ -105,6 +111,12 @@ volumes:
   rabbitmqdisc1_data:
     driver: local
   rabbitmqram1_data:
+    driver: local
+  mongo1-data:
+    driver: local
+  mongo2-data:
+    driver: local
+  mongo3-data:
     driver: local
   
 

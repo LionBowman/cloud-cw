@@ -1,4 +1,4 @@
-use('NotFlixDB');
+use('notFlixDB');
 // The drop() command destroys all data from a collection.
 // Make sure you run it against the correct database and collection.
 db.analytics.drop();
@@ -24,6 +24,6 @@ db.analytics.insertMany([
   }
 ]);
 // NOTE: need to see if I need an '_id' in the schema to stop it auto-generating? 
-use('NotFlixDB');
+use('notFlixDB');
 db.getCollection('analytics')
  .find();
