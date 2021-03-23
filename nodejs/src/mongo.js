@@ -28,7 +28,7 @@ var analyticsModel = mongoose.model('analytics', analyticsSchema, 'analytics');
 
 
 function getAll() {  
-  analyticsModel.find({}, 'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction', (err, analytics) => {
+  return analyticsModel.find({}, 'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction', (err, analytics) => {
       if(err) return err;
       return JSON.stringify(analytics)
     }) 
@@ -36,10 +36,11 @@ function getAll() {
 
 function postAll(model) {
   var new_analytics_instance = new analyticsModel(model);
-  new_analytics_instance.save(function (err) {
+  return new_analytics_instance.save(function (err) {
   if (err) return err;
   return JSON.stringify(new_analytics_instance)
   });
 }
+// comment
 
 module.exports = {getAll, postAll};
