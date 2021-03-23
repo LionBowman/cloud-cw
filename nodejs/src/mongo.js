@@ -51,9 +51,7 @@ var analyticsModel = mongoose.model('analytics', analyticsSchema, 'analytics');
 
 
 app.get('/', (req, res) => {
-  analyticsModel.find({},
-    // 'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction', 
-    (err, analytics) => {
+  analyticsModel.find({}, 'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction', (err, analytics) => {
     if(err) return handleError(err);
     res.send(JSON.stringify(analytics))
   }) 
@@ -62,7 +60,7 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
   var new_analytics_instance = new analyticsModel(req.body);
   new_analytics_instance.save(function (err) {
-  if (err) res.send('Error');
+  if (err) res.send(err);
   res.send(JSON.stringify(req.body))
   });
  })
