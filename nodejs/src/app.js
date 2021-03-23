@@ -1,7 +1,7 @@
 //Express web service library
-const express = require('express')
-const broadcast = requires('./broadcast.js');
-const mongo = requires('./mongo.js');
+const express = require('express');
+const broadcast = require('./broadcast.js');
+const mongo = require('./mongo.js');
 
 //instance of express and port to use for inbound connections.
 const app = express()
