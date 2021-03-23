@@ -49,32 +49,28 @@ var analyticsSchema = new Schema({
 var analyticsModel = mongoose.model('analytics', analyticsSchema, 'analytics');
 
 
+function getAll() {
+  app.get('/', (_, res) => {
+    analyticsModel.find({}, 'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction', (err, analytics) => {
+      if(err) return handleError(err);
+      res.send(JSON.stringify(analytics))
+    }) 
+  })
+}
+function postAll() {
+  app.post('/', (req, res) => {
+    var new_analytics_instance = new analyticsModel(req.body);
+    new_analytics_instance.save(function (err) {
+    if (err) res.send(err);
+    res.send(JSON.stringify(req.body))
+    });
+   })
+}
 
-app.get('/', (req, res) => {
-  analyticsModel.find({}, 'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction', (err, analytics) => {
-    if(err) return handleError(err);
-    res.send(JSON.stringify(analytics))
-  }) 
-})
-
-app.post('/', (req, res) => {
-  var new_analytics_instance = new analyticsModel(req.body);
-  new_analytics_instance.save(function (err) {
-  if (err) res.send(err);
-  res.send(JSON.stringify(req.body))
-  });
- })
-
-app.put('/',  (req, res) => {
-  res.send('Got a PUT request at /')
-})
-
-app.delete('/',  (req, res) => {
-  res.send('Got a DELETE request at /')
-})
 
 //bind the express web service to the port specified
 app.listen(port, () => {
  console.log(`Express Application listening at port ` + port)
 })
 
+module.exports = {getAll, postAll};
