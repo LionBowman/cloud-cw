@@ -1,4 +1,3 @@
-
 //Object data modelling library for mongo
 const mongoose = require('mongoose');
 
@@ -27,20 +26,20 @@ var analyticsSchema = new Schema({
 var analyticsModel = mongoose.model('analytics', analyticsSchema, 'analytics');
 
 
-function getAll() {  
-  return analyticsModel.find({}, 'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction', (err, analytics) => {
-    if(err) return err;
+function getAll() { 
+  analyticsModel.find({}, 'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction', (err, analytics) => {
+    if(err) return err
+      console.log('Output of analytics before return: ' + analytics);
       return analytics
-    }) 
+    })
 }
 
 function postAll(model) {
-  var new_analytics_instance = new analyticsModel(model);
-  return new_analytics_instance.save(function (err) {
-  if (err) return err;
+  var new_analytics_instance = new analyticsModel(model)
+  new_analytics_instance.save(function (err) {
+  if (err) return err
   return new_analytics_instance
   });
 }
-// comment
 
-module.exports = {getAll, postAll};
+module.exports = {getAll, postAll}
