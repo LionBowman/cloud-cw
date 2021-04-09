@@ -2,6 +2,40 @@ var amqp = require('amqplib/callback_api');
 //var connectionString = 'amqp://user:bitnami@RabbitMQ-LB:5672'; // OLD connection string
 var connectionString = 'amqp://user:bitnami@192.168.91.3:5672';
 
+//Get the hostname of the node
+var os = require("os");
+var myhostname = os.hostname();
+var nodeNameFileChecked = false;
+
+var fs = require('fs');
+
+var ipaddr = require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+  console.log('Success - the addr: ' + add);
+})
+
+function AddNodeToFile(nodeName) {
+  fs.appendFile('nodeNames.txt', nodeName, function (err) {
+    if (err) throw err;
+    console.log('nodeNames added to the file');
+  });
+}
+
+if(!nodeNameFileChecked) {
+  fs.access('nodeNames.txt', (err) => {
+    if (err) {
+        console.log("The 'nodeNames.txt' file does not exist.");
+        AddNodeToFile("");
+        console.log("An empty 'nodeNames.txt' file has now been created.");
+        nodeNameFileChecked = true;
+    } else {
+        console.log("The file already exists.");
+        nodeNameFileChecked = true;
+    }
+});
+} else {
+  AddNodeToFile({hName: hostname, addr: ipaddr});
+}
+
 amqp.connect(connectionString, function(error0, connection) {});
 
 // Publish
@@ -9,32 +43,34 @@ amqp.connect(connectionString, function(error0, connection) {
       if (error0) {
               throw error0;
             }
-      console.log("we have a connection using: " + connectionString)
+      console.log("we have a connection using: " + connectionString + "for " + myhostname)
       connection.createChannel(function(error1, channel) {});
 });
 
-amqp.connect(connectionString, function(error0, connection) {
+  amqp.connect(connectionString, function(error0, connection) {
 
-if (error0) {
-        throw error0;
-      }
-      connection.createChannel(function(error1, channel) {
-              if (error1) {
-                        throw error1;
-                      }
-              var exchange = 'logs';
-              var msg =  'Hello World!';
-
-              channel.assertExchange(exchange, 'fanout', {
-                        durable: false
-                      });
-              channel.publish(exchange, '', Buffer.from(msg));
-              console.log(" [x] Sent %s", msg);
-            });
-            
-    setTimeout(function() {
-              }, 500);
-});
+    if (error0) {
+            throw error0;
+          }
+          setInterval(function() {
+          connection.createChannel(function(error1, channel) {
+                  if (error1) {
+                            throw error1;
+                          }
+                  var exchange = 'logs';
+                  var msg =  'Hello World!';
+    
+                  channel.assertExchange(exchange, 'fanout', {
+                            durable: false
+                          });
+                  channel.publish(exchange, '', Buffer.from(msg));
+                  console.log(" [x] Sent %s", msg);
+                });
+                
+        setTimeout(function() {
+                  }, 500);
+        }, 1000)
+    });
 
 // Subscribe
 amqp.connect(connectionString, function(error0, connection) {
