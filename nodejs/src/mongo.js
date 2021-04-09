@@ -40,7 +40,7 @@ function getAll(req, res, next) {
     .exec(function (err, analytics) {
       if (err) { return next(err); }
       //Successful, so render
-      res.render('book_list', { title: 'Book List', book_list: analytics });
+      res.json(analytics);
     });
 
 };
