@@ -67,7 +67,7 @@ amqp.connect(connectionString, function(error0, connection) {
                             throw error1;
                           }
                   var exchange = 'logs';
-                  var msg =  '{ ' + myhostname + ' }" : "{ ' + ipaddr + ' }"';
+                  var msg =  '{ ' + myhostname + ' }" : "{ ' + defineAddr + ' }"';
     
                   channel.assertExchange(exchange, 'fanout', {
                             durable: false
