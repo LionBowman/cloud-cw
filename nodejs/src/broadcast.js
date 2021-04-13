@@ -8,7 +8,7 @@ var myhostname = os.hostname(); // Note: This may become the NodeID
 // var nodeNameFileChecked = false;
 
 const fs = require('fs');
-nodesJsonFile = fs.readFileSync('node.json');
+nodesJsonFile = fs.readFileSync('nodes.json');
 nodes = JSON.parse(nodesJsonFile);
 
 // Gets the IP address of the node
