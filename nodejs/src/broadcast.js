@@ -6,6 +6,7 @@ var connectionString = 'amqp://user:bitnami@192.168.91.3:5672';
 var os = require("os");
 var myhostname = os.hostname(); // Note: This may become the NodeID
 // var nodeNameFileChecked = false;
+var defineAddr;
 
 const fs = require('fs');
 nodesJsonFile = fs.readFileSync('nodes.json');
@@ -14,7 +15,10 @@ nodes = JSON.parse(nodesJsonFile);
 // Gets the IP address of the node
 var ipaddr = require('dns').lookup(require('os').hostname(), function (err, add, fam) {
   console.log('Success - the addr: ' + add);
+  defineAddr = add;
 })
+
+
 
 // Create or append a file with the node names
 // function AddNodeToFile(nodeName) {
