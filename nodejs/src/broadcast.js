@@ -138,7 +138,7 @@ amqp.connect(connectionString, function (error0, connection) {
 
     setTimeout(function () {
     }, 500);
-  }, 1000)
+  }, 10000)
 });
 
 // Subscribe
