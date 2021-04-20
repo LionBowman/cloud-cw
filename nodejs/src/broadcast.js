@@ -121,14 +121,13 @@ function LeaderElection () {
   activeNodes = 0;
   pruneDeadNodes();
   nodeArr.forEach((node) => {
-    console.log("test " , node)
+    //console.log("test " , node)
     if (node.hostname != thisNode.hostname) {
         activeNodes++;
         if (node.id > thisNode.id) {
           leader = 0;
-          console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
+          //console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
         }
-      //}
     }
     if ((leader == 1) && (activeNodes == (nodeArr.length - 1))) {
       systemLeader = 1;
@@ -145,9 +144,9 @@ function LeaderElection () {
       lastNewNodeCreationTime = Date.now();
     }
   }
-  console.log("-------------")
-  console.log("System Leader = ", systemLeader)
-  console.log("-------------")
+  // console.log("-------------")
+  // console.log("System Leader = ", systemLeader)
+  // console.log("-------------")
 };
 
 function getNode () {
@@ -173,7 +172,7 @@ amqp.connect(connectionString, function (error0, connection) {
   if (error0) {
     throw error0;
   }
-  console.log("we have a connection using: " + connectionString + "for " + myhostname)
+  //console.log("we have a connection using: " + connectionString + "for " + myhostname)
   connection.createChannel(function (error1, channel) { });
 });
 
@@ -194,12 +193,12 @@ amqp.connect(connectionString, function (error0, connection) {
         durable: false
       });
       channel.publish(exchange, '', Buffer.from(msg));
-      console.log(" [x] Sent %s", msg);
+      console.log(" [x] PUBLISH: Sent %s", msg);
     });
 
     setTimeout(function () {
     }, 500);
-  }, 10000)
+  }, 5000)
 });
 
 // Subscribe
@@ -228,7 +227,7 @@ amqp.connect(connectionString, function (error0, connection) {
 
       channel.consume(q.queue, function (msg) {
         if (msg.content) {
-          console.log(" [x] Received %s", msg.content.toString());
+          console.log(" [x] SUBSCRIBE: Received %s", msg.content.toString());
           AddToArray(JSON.parse(msg.content.toString()));
           LeaderElection();
         }
