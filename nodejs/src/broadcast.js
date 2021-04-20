@@ -140,9 +140,9 @@ function LeaderElection () {
   console.log('am I the leader = ', systemLeader)
   if(systemLeader) {
     if(lastNewNodeCreationTime == undefined || lastNewNodeCreationTime <= Date.now() - 20000) {
-      while(nodeArr.length < minNodeCount)
-        //createNewNode();
-        console.log('CREATING new node (Not really)!');
+      //while(nodeArr.length < minNodeCount)  // HERE: the issue lies with this loop!!!
+          //createNewNode();
+       // console.log('CREATING new node (Not really)!');
       lastNewNodeCreationTime = Date.now();
     }
   }
