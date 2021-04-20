@@ -60,6 +60,8 @@ function getNode () {
 }
 
 function AddToArray(nodeToAdd) {
+  if(nodeArr.some(node => node.id == nodeToAdd.id))
+    return;
   nodeArr.push(nodeToAdd);
 }
 
@@ -92,6 +94,7 @@ amqp.connect(connectionString, function (error0, connection) {
       });
       channel.publish(exchange, '', Buffer.from(msg));
       console.log(" [x] Sent %s", msg);
+      console.log(systemLeader);
     });
 
     setTimeout(function () {
