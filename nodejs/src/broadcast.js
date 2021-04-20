@@ -25,6 +25,8 @@ const minNodeCount = 3;
 
 var newNodeStartId = 1;
 
+var lastNewNodeCreationTime; 
+
 // Empty array
 var nodeArr = [];
 
@@ -44,12 +46,70 @@ function pruneDeadNodes() {
 }
 
 async function createNewNode() {
+  
   const createData = {
     Image: 'cloud-cw_node1',
     Hostname: 'newNode' + newNodeStartId,
   };
 
+  //create the post object to send to the docker api to create a container
+var create = {
+  uri: url + "/v1.40/containers/create",
+method: 'POST',
+  //deploy an container based on the createData params
+json: createData
+};
 
+//send the create request
+request(create, function (error, response, createBody) {
+  if (!error) {
+    console.log("Created container " + JSON.stringify(createBody));
+   
+      //post object for the container start request
+      var start = {
+          uri: url + "/v1.40/containers/" + createBody.Id + "/start",
+        method: 'POST',
+        json: {}
+    };
+  
+    //send the start request
+      request(start, function (error, response, startBody) {
+        if (!error) {
+          console.log("Container start completed");
+    
+              //post object for  wait 
+              var wait = {
+            uri: url + "/v1.40/containers/" + createBody.Id + "/wait",
+                  method: 'POST',
+              json: {}
+          };
+     
+              
+        request(wait, function (error, response, waitBody ) {
+            if (!error) {
+              console.log("run wait complete, container will have started");
+                
+                      //send a simple get request for stdout from the container
+                      request.get({
+                          url: url + "/v1.40/containers/" + createBody.Id + "/logs?stdout=1",
+                          }, (err, res, data) => {
+                                  if (err) {
+                                      console.log('Error:', err);
+                                  } else if (res.statusCode !== 200) {
+                                      console.log('Status:', res.statusCode);
+                                  } else{
+                                      //we need to parse the json response to access
+                                      console.log("Container stdout = " + data);
+                                      containerQty();
+                                  }
+                              });
+                      }
+          });
+          }
+      });
+
+  }   
+});
   newNodeStartId++;
 }
 
@@ -78,14 +138,15 @@ function LeaderElection () {
       console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
     }
   });
-  // if(systemLeader) {
-  //   while(nodeArr.length < minNodeCount)
-  //     createNewNode();
-  // }
+  if(systemLeader) {
+    if(lastNewNodeCreationTime == undefined || lastNewNodeCreationTime <= Date.now() - 20000) {
+      while(nodeArr.length < minNodeCount)
+        createNewNode();
+      lastNewNodeCreationTime = Date.now();
+    }
+  }
   console.log("-------------")
   console.log("System Leader = ", systemLeader)
-  // console.log("Active Nodes = ", activeNodes)
-  // console.log("Node Array Length (-1) = ", (nodeArr.length - 1))
   console.log("-------------")
 };
 
