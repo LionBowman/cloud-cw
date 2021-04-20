@@ -35,13 +35,10 @@ function LeaderElection () {
   activeNodes = 0;
   nodeArr.forEach((node) => {
     console.log("test " , node)
-    maxNodeID = thisNode.id;
     if (node.hostname != thisNode.hostname) {
-      // if ("nodeID" in prop) {
         activeNodes++;
         if (node.id > thisNode.id) {
           leader = 0;
-          maxNodeID = node.id;
           console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
         }
       //}
@@ -49,6 +46,9 @@ function LeaderElection () {
     if ((leader == 1) && (activeNodes == (nodeArr.length - 1))) {
       systemLeader = 1;
       console.log("I'm the leader")
+    } else {
+      systemLeader = 0;
+      console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
     }
   });
   console.log("-------------")
