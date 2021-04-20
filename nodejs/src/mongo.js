@@ -52,4 +52,4 @@ function postAll(model) {
   });
 }
 
-module.exports = {getAll, postAll}
+module.exports = {getAll, postAll,analyticsModel}
