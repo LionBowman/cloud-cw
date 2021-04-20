@@ -21,6 +21,10 @@ var ipaddr = require('dns').lookup(require('os').hostname(), function (err, add,
 // Initialise not as the leader
 var systemLeader = 0;
 
+const minNodeCount = 3;
+
+var newNodeStartId = 1;
+
 // Empty array
 var nodeArr = [];
 
@@ -37,6 +41,16 @@ function pruneDeadNodes() {
     newNodeArr.push(node);
   })
   nodeArr = newNodeArr;
+}
+
+async function createNewNode() {
+  const createData = {
+    Image: 'cloud-cw_node1',
+    Hostname: 'newNode' + newNodeStartId,
+  };
+
+
+  newNodeStartId++;
 }
 
 // Check if leader
@@ -64,6 +78,10 @@ function LeaderElection () {
       console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
     }
   });
+  if(systemLeader) {
+    while(nodeArr.length < minNodeCount)
+      createNewNode();
+  }
   console.log("-------------")
   console.log("System Leader = ", systemLeader)
   // console.log("Active Nodes = ", activeNodes)
