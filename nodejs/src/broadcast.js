@@ -33,7 +33,7 @@ function pruneDeadNodes() {
   var newNodeArr = [];
   nodeArr.forEach((node) => {
     if(node.lastAliveTime <= Date.now() - pruneTimeout)
-      continue;
+      return;
     newNodeArr.push(node);
   })
   nodeArr = newNodeArr;
