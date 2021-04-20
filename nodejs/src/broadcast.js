@@ -78,10 +78,10 @@ function LeaderElection () {
       console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
     }
   });
-  if(systemLeader) {
-    while(nodeArr.length < minNodeCount)
-      createNewNode();
-  }
+  // if(systemLeader) {
+  //   while(nodeArr.length < minNodeCount)
+  //     createNewNode();
+  // }
   console.log("-------------")
   console.log("System Leader = ", systemLeader)
   // console.log("Active Nodes = ", activeNodes)
