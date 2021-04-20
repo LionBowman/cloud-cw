@@ -145,16 +145,21 @@ function LeaderElection () {
       lastNewNodeCreationTime = Date.now();
     }
   }
+  const v8 = require('v8');
+  const totalHeapSize = v8.getHeapStatistics().total_available_size;
+  const totalHeapSizeGb = (totalHeapSize / 1024 / 1024 / 1024).toFixed(2);
+  console.log('totalHeapSizeGb: ', totalHeapSizeGb);
   // console.log("-------------")
   // console.log("System Leader = ", systemLeader)
   // console.log("-------------")
 };
 
 function getNode () {
+  var currentDate = Date.now();
   const node = {
     id: nodeID,
     hostname: os.hostname(),
-    lastAliveTime: Date.now().toLocaleString('en-GB')
+    lastAliveTime: currentDate.toUTCString()
   };
 
   return node
