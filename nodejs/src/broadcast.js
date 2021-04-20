@@ -41,8 +41,11 @@ function LeaderElection () {
         activeNodes++;
         if (node.id > thisNode.id) {
           leader = 0;
+          maxNodeID = node.id;
+          console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
         }
       //}
+      console.log("I'm the leader")
     }
     if ((leader == 1) && (activeNodes == (nodeArr.length - 1))) {
       systemLeader = 1;
