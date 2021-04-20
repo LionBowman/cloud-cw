@@ -154,7 +154,7 @@ function getNode () {
   const node = {
     id: nodeID,
     hostname: os.hostname(),
-    lastAliveTime: Date.now()
+    lastAliveTime: Date.now().toLocaleString('en-GB')
   };
 
   return node
