@@ -24,8 +24,20 @@ var systemLeader = 0;
 // Empty array
 var nodeArr = [];
 
+const pruneTimeout = 30000;
+
 var nodeID = Math.floor(Math.random() * (100 - 1 + 1) + 1);
 //toSend = {"hostname" : myhostname, "status": "alive","nodeID":nodeID} ;
+
+function pruneDeadNodes() {
+  var newNodeArr = [];
+  nodeArr.forEach((node) => {
+    if(node.lastAliveTime <= Date.now() - pruneTimeout)
+      continue;
+    newNodeArr.push(node);
+  })
+  nodeArr = newNodeArr;
+}
 
 // Check if leader
 function LeaderElection () {
@@ -33,6 +45,7 @@ function LeaderElection () {
   var thisNode = getNode();
   leader = 1;
   activeNodes = 0;
+  pruneDeadNodes();
   nodeArr.forEach((node) => {
     console.log("test " , node)
     if (node.hostname != thisNode.hostname) {
@@ -61,7 +74,8 @@ function LeaderElection () {
 function getNode () {
   const node = {
     id: nodeID,
-    hostname: os.hostname()
+    hostname: os.hostname(),
+    lastAliveTime: Date.now()
   };
 
   return node
