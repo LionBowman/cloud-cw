@@ -137,6 +137,7 @@ function LeaderElection () {
       console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
     }
   });
+  console.log('am I the leader = ', systemLeader)
   if(systemLeader) {
     if(lastNewNodeCreationTime == undefined || lastNewNodeCreationTime <= Date.now() - 20000) {
       while(nodeArr.length < minNodeCount)
