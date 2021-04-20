@@ -30,6 +30,7 @@ setInterval(function() {
   leader = 1;
   activeNodes = 0;
   Object.entries(nodes).forEach(([hostname,prop]) => {
+    console.log(nodeID) // test
     console.log("test" + JSON.stringify(hostname) + JSON.stringify(prop) )
     maxNodeID = nodeID;
     if(hostname != myhostname){
