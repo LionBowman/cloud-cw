@@ -2,7 +2,7 @@ var amqp = require('amqplib/callback_api');
 //var connectionString = 'amqp://user:bitnami@haproxy:5672'; 
 var connectionString = 'amqp://user:bitnami@192.168.91.3:5672';
 
-//Get the hostname of the node
+// Get the hostname of the node
 var os = require("os");
 var myhostname = os.hostname(); // Note: This may become the NodeID
 // var nodeNameFileChecked = false;
@@ -18,6 +18,35 @@ var ipaddr = require('dns').lookup(require('os').hostname(), function (err, add,
   defineAddr = add;
 })
 
+// Initialise not as the leader
+var systemLeader = 0
+
+var nodeID = Math.floor(Math.random() * (100 - 1 + 1) + 1);
+//toSend = {"hostname" : myhostname, "status": "alive","nodeID":nodeID} ;
+
+// Check if leader
+setInterval(function() {
+  console.log(JSON.stringify(nodes));
+  leader = 1;
+  activeNodes = 0;
+  Object.entries(nodes).forEach(([hostname,prop]) => {
+    console.log("test" + JSON.stringify(hostname) + JSON.stringify(prop) )
+    maxNodeID = nodeID;
+    if(hostname != myhostname){
+      if("nodeID" in prop){
+        activeNodes++;
+        if(prop.nodeID > nodeID)
+        {
+          leader = 0;
+        }
+      }
+    }
+    if((leader == 1) && (activeNodes == (nodes.length - 1)))
+    {
+      systemLeader = 1;
+    }
+  });
+}, 2000);
 
 
 // Create or append a file with the node names
