@@ -45,10 +45,10 @@ function LeaderElection () {
           console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
         }
       //}
-      console.log("I'm the leader")
     }
     if ((leader == 1) && (activeNodes == (nodeArr.length - 1))) {
       systemLeader = 1;
+      console.log("I'm the leader")
     }
   });
   console.log("-------------")
