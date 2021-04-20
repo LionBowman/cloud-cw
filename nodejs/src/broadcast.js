@@ -48,7 +48,12 @@ function LeaderElection () {
       systemLeader = 1;
     }
   });
+  console.log("-------------")
   console.log("System Leader = ", systemLeader)
+  console.log("Max Node ID = ", maxNodeID)
+  console.log("Active Nodes = ", activeNodes)
+  console.log("Node Array Length (-1) = ", (nodeArr.length - 1))
+  console.log("-------------")
 };
 
 function getNode () {
