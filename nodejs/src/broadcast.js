@@ -155,11 +155,10 @@ function LeaderElection () {
 };
 
 function getNode () {
-  var currentDate = Date.now();
   const node = {
     id: nodeID,
     hostname: os.hostname(),
-    lastAliveTime: currentDate.toUTCString()
+    lastAliveTime: Date.now()
   };
 
   return node
