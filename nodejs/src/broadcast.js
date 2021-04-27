@@ -145,7 +145,7 @@ function LeaderElection () {
           createNewNode();
         console.log('CREATING new node (Not really)!');
       //console.log('Last new node creation time is : ', lastNewNodeCreationTime);
-      lastNewNodeCreationTime = Date.now();
+    lastNewNodeCreationTime = Date.now();
     }
   }
   // console.log("-------------")
