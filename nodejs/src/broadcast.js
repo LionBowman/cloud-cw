@@ -17,10 +17,6 @@ var ipaddr = require('dns').lookup(require('os').hostname(), function (err, add,
 // Import the request library
 var request = require('request');
 
-// const fs = require('fs');
-// nodesJsonFile = fs.readFileSync('nodes.json');
-// nodes = JSON.parse(nodesJsonFile);
-
 // Initialise not as the leader
 var systemLeader = 0;
 // Initial number of containers (on startup)
@@ -57,14 +53,14 @@ async function createNewNode() {
     Hostname: 'newNode' + newNodeStartId,
   };
 
-var url = connectionString; // TEST: URL was not defined - mentioned in PM2 log
+var url = connectionString;
 
 // POST request to the Docker API for creating a new node
 var create = {
   uri: url + "/v1.40/containers/create",
-method: 'POST',
+  method: 'POST',
   //deploy an container based on the createData params
-json: createData
+  json: createData
 };
 
 // Container create request
@@ -107,7 +103,6 @@ request(create, function (error, response, createBody) {
                                   } else{
                                       // Parse the json response to access
                                       console.log("Container stdout = " + data);
-                                      containerQty();
                                   }
                               });
                       }
