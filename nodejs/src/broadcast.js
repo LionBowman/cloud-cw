@@ -14,6 +14,9 @@ var ipaddr = require('dns').lookup(require('os').hostname(), function (err, add,
   defineAddr = add;
 })
 
+// Import the request library
+var request = require('request');
+
 // const fs = require('fs');
 // nodesJsonFile = fs.readFileSync('nodes.json');
 // nodes = JSON.parse(nodesJsonFile);
@@ -154,10 +157,9 @@ function LeaderElection () {
       // }
         var interval = setInterval(function() {
           if (nodeArr.length < minNodeCount) {
-            // nodeArr.length seems a bit unstable - may need to delay or double check before creating new node
-            createNewNode()
             console.log('IN LOOP!!!'); // Debug
-            console.log('CREATING new node (Not really)!');
+            createNewNode()
+            console.log('EXITING LOOP!!!'); // Debug
           } else {
             clearInterval(interval);
           }
@@ -185,8 +187,6 @@ function AddToArray(nodeToAdd) {
     return;
   nodeArr.push(nodeToAdd);
 }
-
-// amqp.connect(connectionString, function (error0, connection) { });
 
 // Publish
 amqp.connect(connectionString, function (error0, connection) {
