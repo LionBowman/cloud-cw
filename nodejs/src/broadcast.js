@@ -1,16 +1,12 @@
 var amqp = require('amqplib/callback_api');
-//var connectionString = 'amqp://user:bitnami@haproxy:5672'; 
 var connectionString = 'amqp://user:bitnami@192.168.91.3:5672';
 
 // Get the hostname of the node
 var os = require("os");
 var myhostname = os.hostname(); // Note: This may become the NodeID
 // var nodeNameFileChecked = false;
+// IP Address variable
 var defineAddr;
-
-const fs = require('fs');
-nodesJsonFile = fs.readFileSync('nodes.json');
-nodes = JSON.parse(nodesJsonFile);
 
 // Gets the IP address of the node
 var ipaddr = require('dns').lookup(require('os').hostname(), function (err, add, fam) {
@@ -18,23 +14,27 @@ var ipaddr = require('dns').lookup(require('os').hostname(), function (err, add,
   defineAddr = add;
 })
 
+// const fs = require('fs');
+// nodesJsonFile = fs.readFileSync('nodes.json');
+// nodes = JSON.parse(nodesJsonFile);
+
 // Initialise not as the leader
 var systemLeader = 0;
-
+// Initial number of containers (on startup)
 const minNodeCount = 3;
-
+// Initial ID number for newly created nodes
 var newNodeStartId = 1;
-
+// Time variable for the last created node (additional to the starting nodes)
 var lastNewNodeCreationTime; 
-
-// Empty array
+// Initial Empty node array
 var nodeArr = [];
-
+// Timeout for dead node pruning
 const pruneTimeout = 30000;
-
+// Sets the node ID based on .. (ToDo: need to change to use date/time number as the ID)
 var nodeID = Math.floor(Math.random() * (100 - 1 + 1) + 1);
 //toSend = {"hostname" : myhostname, "status": "alive","nodeID":nodeID} ;
 
+// Removes dead nodes from the node array list
 function pruneDeadNodes() {
   console.log('CALLED: prune dead nodes'); // Debug
   var newNodeArr = [];
@@ -46,14 +46,17 @@ function pruneDeadNodes() {
   nodeArr = newNodeArr;
 }
 
+// Creates new nodes using the Docker API
 async function createNewNode() {
   console.log('CALLED: create new node'); // Debug
   const createData = {
     Image: 'cloud-cw_node1',
     Hostname: 'newNode' + newNodeStartId,
   };
-  var url = connectionString; // TEST
-  //create the post object to send to the docker api to create a container
+
+var url = connectionString; // TEST: URL was not defined - mentioned in PM2 log
+
+// POST request to the Docker API for creating a new node
 var create = {
   uri: url + "/v1.40/containers/create",
 method: 'POST',
@@ -61,24 +64,24 @@ method: 'POST',
 json: createData
 };
 
-//send the create request
+// Container create request
 request(create, function (error, response, createBody) {
   if (!error) {
     console.log("Created container " + JSON.stringify(createBody));
    
-      //post object for the container start request
+      // POST request for container start
       var start = {
           uri: url + "/v1.40/containers/" + createBody.Id + "/start",
         method: 'POST',
         json: {}
     };
   
-    //send the start request
+    // Container start request
       request(start, function (error, response, startBody) {
         if (!error) {
           console.log("Container start completed");
     
-              //post object for  wait 
+              // POST request for container wait
               var wait = {
             uri: url + "/v1.40/containers/" + createBody.Id + "/wait",
                   method: 'POST',
@@ -90,7 +93,7 @@ request(create, function (error, response, createBody) {
             if (!error) {
               console.log("run wait complete, container will have started");
                 
-                      //send a simple get request for stdout from the container
+                      // Get request for stdout from the container
                       request.get({
                           url: url + "/v1.40/containers/" + createBody.Id + "/logs?stdout=1",
                           }, (err, res, data) => {
@@ -99,7 +102,7 @@ request(create, function (error, response, createBody) {
                                   } else if (res.statusCode !== 200) {
                                       console.log('Status:', res.statusCode);
                                   } else{
-                                      //we need to parse the json response to access
+                                      // Parse the json response to access
                                       console.log("Container stdout = " + data);
                                       containerQty();
                                   }
@@ -111,10 +114,11 @@ request(create, function (error, response, createBody) {
 
   }   
 });
+  // Increment the new node ID
   newNodeStartId++;
 }
 
-// Check if leader
+// Elect a leader - Check who is the leader
 function LeaderElection () {
   console.log('CALLED: leader election'); // Debug
   console.log(nodeArr);
@@ -123,7 +127,6 @@ function LeaderElection () {
   activeNodes = 0;
   pruneDeadNodes();
   nodeArr.forEach((node) => {
-    //console.log("test " , node)
     if (node.hostname != thisNode.hostname) {
         activeNodes++;
         if (node.id > thisNode.id) {
@@ -139,7 +142,9 @@ function LeaderElection () {
   });
   console.log('am I the leader = ', systemLeader, ' node array size = ', nodeArr.length)
   if(systemLeader) {
+    // Checks to see if lastNewNodeCreationTime within the last 20 secs or undefined ?
     if(lastNewNodeCreationTime == undefined || lastNewNodeCreationTime <= Date.now() - 20000) {
+      // Create a new node while there are less than 3 nodes in the array list
       // while(nodeArr.length < minNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
       //     console.log('IN LOOP!!!'); // Debug
       //     setTimeout(function(){ createNewNode(); }, 2000); // trying to delay the method for node array length to increase
@@ -149,7 +154,7 @@ function LeaderElection () {
       // }
         var interval = setInterval(function() {
           if (nodeArr.length < minNodeCount) {
-            // nodeArr.length is a bit unstable - need to delay or double check before creating new node
+            // nodeArr.length seems a bit unstable - may need to delay or double check before creating new node
             createNewNode()
             console.log('IN LOOP!!!'); // Debug
             console.log('CREATING new node (Not really)!');
@@ -157,17 +162,13 @@ function LeaderElection () {
             clearInterval(interval);
           }
         }, 3000);
-        //   console.log('IN LOOP!!!'); // Debug
-        // console.log('CREATING new node (Not really)!');
       //console.log('Last new node creation time is : ', lastNewNodeCreationTime);
       lastNewNodeCreationTime = Date.now();
     }
   }
-  // console.log("-------------")
-  // console.log("System Leader = ", systemLeader)
-  // console.log("-------------")
 };
 
+// Returns the node information
 function getNode () {
   const node = {
     id: nodeID,
@@ -178,6 +179,7 @@ function getNode () {
   return node
 }
 
+// Adds a node that doesn't already exist into the node array
 function AddToArray(nodeToAdd) {
   if(nodeArr.some(node => node.id == nodeToAdd.id))
     return;
