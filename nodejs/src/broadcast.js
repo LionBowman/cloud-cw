@@ -186,7 +186,7 @@ function AddToArray(nodeToAdd) {
   nodeArr.push(nodeToAdd);
 }
 
-amqp.connect(connectionString, function (error0, connection) { });
+// amqp.connect(connectionString, function (error0, connection) { });
 
 // Publish
 amqp.connect(connectionString, function (error0, connection) {
