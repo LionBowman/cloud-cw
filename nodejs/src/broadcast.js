@@ -52,7 +52,7 @@ async function createNewNode() {
     Image: 'cloud-cw_node1',
     Hostname: 'newNode' + newNodeStartId,
   };
-
+  var url = connectionString; // TEST
   //create the post object to send to the docker api to create a container
 var create = {
   uri: url + "/v1.40/containers/create",
@@ -128,15 +128,13 @@ function LeaderElection () {
         activeNodes++;
         if (node.id > thisNode.id) {
           leader = 0;
-          //console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
         }
     }
     if ((leader == 1) && (activeNodes == (nodeArr.length - 1))) {
       systemLeader = 1;
-      console.log("I'm the leader")
     } else {
       systemLeader = 0;
-      console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
+      //console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
     }
   });
   console.log('am I the leader = ', systemLeader, ' node array size = ', nodeArr.length)
@@ -151,6 +149,7 @@ function LeaderElection () {
       // }
         var interval = setInterval(function() {
           if (nodeArr.length < minNodeCount) {
+            // nodeArr.length is a bit unstable - need to delay or double check before creating new node
             createNewNode()
             console.log('IN LOOP!!!'); // Debug
             console.log('CREATING new node (Not really)!');
