@@ -36,6 +36,7 @@ var nodeID = Math.floor(Math.random() * (100 - 1 + 1) + 1);
 //toSend = {"hostname" : myhostname, "status": "alive","nodeID":nodeID} ;
 
 function pruneDeadNodes() {
+  console.log('CALLED: prune dead nodes'); // Debug
   var newNodeArr = [];
   nodeArr.forEach((node) => {
     if(node.lastAliveTime <= Date.now() - pruneTimeout)
@@ -46,7 +47,7 @@ function pruneDeadNodes() {
 }
 
 async function createNewNode() {
-  
+  console.log('CALLED: create new node'); // Debug
   const createData = {
     Image: 'cloud-cw_node1',
     Hostname: 'newNode' + newNodeStartId,
@@ -115,6 +116,7 @@ request(create, function (error, response, createBody) {
 
 // Check if leader
 function LeaderElection () {
+  console.log('CALLED: leader election'); // Debug
   console.log(nodeArr);
   var thisNode = getNode();
   leader = 1;
@@ -139,13 +141,13 @@ function LeaderElection () {
   });
   console.log('am I the leader = ', systemLeader, ' node array size = ', nodeArr.length)
   if(systemLeader) {
-    //if(lastNewNodeCreationTime == undefined || lastNewNodeCreationTime <= Date.now() - 20000) {
-    if(lastNewNodeCreationTime <= Date.now() - 20000) {
+    if(lastNewNodeCreationTime == undefined || lastNewNodeCreationTime <= Date.now() - 20000) {
       while(nodeArr.length < minNodeCount)  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
-          createNewNode();
+          //createNewNode();
+          console.log('IN LOOP!!!'); // Debug
         console.log('CREATING new node (Not really)!');
       //console.log('Last new node creation time is : ', lastNewNodeCreationTime);
-    lastNewNodeCreationTime = Date.now();
+      lastNewNodeCreationTime = Date.now();
     }
   }
   // console.log("-------------")
