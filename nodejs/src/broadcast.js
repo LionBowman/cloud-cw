@@ -142,15 +142,24 @@ function LeaderElection () {
   console.log('am I the leader = ', systemLeader, ' node array size = ', nodeArr.length)
   if(systemLeader) {
     if(lastNewNodeCreationTime == undefined || lastNewNodeCreationTime <= Date.now() - 20000) {
-      while(nodeArr.length < minNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
-          console.log('IN LOOP!!!'); // Debug
-          setTimeout(function(){ createNewNode(); }, 2000); // trying to delay the method for node array length to increase
-          //createNewNode();
-          console.log('Node array size = ', nodeArr.length); // Debug
-          lastNewNodeCreationTime = Date.now();
-      }
-          console.log('IN LOOP!!!'); // Debug
-        console.log('CREATING new node (Not really)!');
+      // while(nodeArr.length < minNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
+      //     console.log('IN LOOP!!!'); // Debug
+      //     setTimeout(function(){ createNewNode(); }, 2000); // trying to delay the method for node array length to increase
+      //     //createNewNode();
+      //     console.log('Node array size = ', nodeArr.length); // Debug
+      //     lastNewNodeCreationTime = Date.now();
+      // }
+        var interval = setInterval(function() {
+          if (nodeArr.length < minNodeCount) {
+            createNewNode()
+            console.log('IN LOOP!!!'); // Debug
+            console.log('CREATING new node (Not really)!');
+          } else {
+            clearInterval(interval);
+          }
+        }, 3000);
+        //   console.log('IN LOOP!!!'); // Debug
+        // console.log('CREATING new node (Not really)!');
       //console.log('Last new node creation time is : ', lastNewNodeCreationTime);
       lastNewNodeCreationTime = Date.now();
     }
