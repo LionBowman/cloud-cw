@@ -123,7 +123,7 @@ function LeaderElection () {
   var thisNode = getNode();
   leader = 1;
   activeNodes = 0;
-  pruneDeadNodes();
+  //pruneDeadNodes();
   nodeArr.forEach((node) => {
     if (node.hostname != thisNode.hostname) {
         activeNodes++;
@@ -180,6 +180,7 @@ function getNode () {
 function AddToArray(nodeToAdd) {
   if(nodeArr.some(node => node.id == nodeToAdd.id))
     return;
+  console.log("ADDING : ", nodeToAdd, " To Array")
   nodeArr.push(nodeToAdd);
 }
 
