@@ -22,7 +22,7 @@ var request = require('request');
 // Initialise not as the leader
 var systemLeader = 0;
 // Initial number of containers (on startup)
-const minNodeCount = 3;
+const targetNodeCount = 3;
 // Initial ID number for newly created nodes
 var newNodeStartId = 1;
 // Time variable for the last created node (additional to the starting nodes)
@@ -32,7 +32,7 @@ var nodeArr = [];
 // Timeout for dead node pruning
 const pruneTimeout = 30000;
 // Sets the node ID based on .. (ToDo: need to change to use date/time number as the ID)
-var nodeID = Math.floor(Math.random() * (100 - 1 + 1) + 1);
+var nodeID = Date.now();
 //toSend = {"hostname" : myhostname, "status": "alive","nodeID":nodeID} ;
 
 // Removes dead nodes from the node array list
@@ -144,10 +144,22 @@ function LeaderElection () {
     if(lastNewNodeCreationTime <= Date.now() - 20000) {
       //Create a new node while there are less than 3 nodes in the array list
       var currentNodeLength = nodeArr.length;
-      while(currentNodeLength < minNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
+      var timeAdjustedNodeCount = targetNodeCount;
+      const date = new Date();
+      if (date.getHours() > 17 && date.getHours() < 23) {
+        timeAdjustedNodeCount += 2;
+      }
+      while(currentNodeLength != targetNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
           console.log('IN LOOP!!!'); // Debug
-          createNewNode();
-          currentNodeLength++;
+          if(currentNodeLength < targetNodeCount) {
+            createNewNode();
+            currentNodeLength++;
+          } else {
+            // Removes the node with the smallest ID
+            const nodeToRemove = nodeArr.sort((a, b) => a.id - b.id).shift().hostname;
+            sendDeleteRequest(nodeToRemove);
+            currentNodeLength--;
+          }
           console.log('Node array size = ', currentNodeLength); // Debug
       }
         // var interval = setInterval(function() {
@@ -164,6 +176,19 @@ function LeaderElection () {
     }
   }
 };
+
+function sendDeleteRequest (nodeName) {
+  var deleteReq = {
+    uri: `${url}/v1.40/containers/${nodeName}?force=true`,
+    method: 'DELETE'
+  }
+  // Container start request
+  request(deleteReq, function (error, _response, _Body) {
+    if (!error) {
+      console.log("Container delete completed");
+    }
+  })
+}
 
 // Returns the node information
 function getNode () {
