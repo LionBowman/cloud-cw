@@ -1,7 +1,7 @@
 //Object data modelling library for mongo
 const mongoose = require('mongoose');
 
-//connection string listing the mongo servers. This is an alternative to using a load balancer. THIS SHOULD BE DISCUSSED IN YOUR ASSIGNMENT.
+//connection string listing the mongo servers. This is an alternative to using a load balancer.
 const connectionString = 'mongodb://localmongo1:27017,localmongo2:27017,localmongo3:27017/notFlixDB?replicaSet=rs0';
 
 //connect to the cluster

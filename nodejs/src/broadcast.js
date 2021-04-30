@@ -24,7 +24,7 @@ const minNodeCount = 3;
 // Initial ID number for newly created nodes
 var newNodeStartId = 1;
 // Time variable for the last created node (additional to the starting nodes)
-var lastNewNodeCreationTime; 
+var lastNewNodeCreationTime = Date.now(); 
 // Initial Empty node array
 var nodeArr = [];
 // Timeout for dead node pruning
@@ -123,7 +123,7 @@ function LeaderElection () {
   var thisNode = getNode();
   leader = 1;
   activeNodes = 0;
-  //pruneDeadNodes();
+  pruneDeadNodes(); // Commented to test if the node array count stabilises
   nodeArr.forEach((node) => {
     if (node.hostname != thisNode.hostname) {
         activeNodes++;
@@ -141,24 +141,23 @@ function LeaderElection () {
   console.log('am I the leader = ', systemLeader, ' node array size = ', nodeArr.length)
   if(systemLeader) {
     // Checks to see if lastNewNodeCreationTime within the last 20 secs or undefined ?
-    if(lastNewNodeCreationTime == undefined || lastNewNodeCreationTime <= Date.now() - 20000) {
-      // Create a new node while there are less than 3 nodes in the array list
-      // while(nodeArr.length < minNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
-      //     console.log('IN LOOP!!!'); // Debug
-      //     setTimeout(function(){ createNewNode(); }, 2000); // trying to delay the method for node array length to increase
-      //     //createNewNode();
-      //     console.log('Node array size = ', nodeArr.length); // Debug
-      //     lastNewNodeCreationTime = Date.now();
-      // }
-        var interval = setInterval(function() {
-          if (nodeArr.length < minNodeCount) {
-            console.log('IN LOOP!!!'); // Debug
-            createNewNode()
-            console.log('EXITING LOOP!!!'); // Debug
-          } else {
-            clearInterval(interval);
-          }
-        }, 3000);
+    if(lastNewNodeCreationTime <= Date.now() - 20000) {
+      //Create a new node while there are less than 3 nodes in the array list
+      while(nodeArr.length < minNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
+          console.log('IN LOOP!!!'); // Debug
+          setTimeout(function(){ createNewNode(); }, 2000); // trying to delay the method for node array length to increase
+          //createNewNode();
+          console.log('Node array size = ', nodeArr.length); // Debug
+      }
+        // var interval = setInterval(function() {
+        //   if (nodeArr.length < minNodeCount) {
+        //     console.log('IN LOOP!!!'); // Debug
+        //     createNewNode()
+        //     console.log('EXITING LOOP!!!'); // Debug
+        //   } else {
+        //     clearInterval(interval);
+        //   }
+        // }, 3000);
       //console.log('Last new node creation time is : ', lastNewNodeCreationTime);
       lastNewNodeCreationTime = Date.now();
     }
