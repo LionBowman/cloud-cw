@@ -146,7 +146,7 @@ function LeaderElection () {
       var currentNodeLength = nodeArr.length;
       var timeAdjustedNodeCount = targetNodeCount;
       const date = new Date();
-      if (date.getHours() > 17 && date.getHours() < 23) {
+      if (date.getHours() > 17 && date.getHours() < 22) {
         timeAdjustedNodeCount += 2;
       }
       while(currentNodeLength != timeAdjustedNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
