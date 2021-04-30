@@ -143,11 +143,12 @@ function LeaderElection () {
     // Checks to see if lastNewNodeCreationTime within the last 20 secs or undefined ?
     if(lastNewNodeCreationTime <= Date.now() - 20000) {
       //Create a new node while there are less than 3 nodes in the array list
-      while(nodeArr.length < minNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
+      var currentNodeLength = nodeArr.length;
+      while(currentNodeLength < minNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
           console.log('IN LOOP!!!'); // Debug
-          setTimeout(function(){ createNewNode(); }, 2000); // trying to delay the method for node array length to increase
-          //createNewNode();
-          console.log('Node array size = ', nodeArr.length); // Debug
+          createNewNode();
+          currentNodeLength++;
+          console.log('Node array size = ', currentNodeLength); // Debug
       }
         // var interval = setInterval(function() {
         //   if (nodeArr.length < minNodeCount) {
