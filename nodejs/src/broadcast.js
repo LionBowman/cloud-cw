@@ -149,9 +149,9 @@ function LeaderElection () {
       if (date.getHours() > 17 && date.getHours() < 23) {
         timeAdjustedNodeCount += 2;
       }
-      while(currentNodeLength != targetNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
+      while(currentNodeLength != timeAdjustedNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
           console.log('IN LOOP!!!'); // Debug
-          if(currentNodeLength < targetNodeCount) {
+          if(currentNodeLength < timeAdjustedNodeCount) {
             createNewNode();
             currentNodeLength++;
           } else {
