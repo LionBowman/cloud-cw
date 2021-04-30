@@ -127,7 +127,7 @@ function LeaderElection () {
   nodeArr.forEach((node) => {
     if (node.hostname != thisNode.hostname) {
         activeNodes++;
-        if (node.id > thisNode.id) {
+        if (node.id < thisNode.id) {
           leader = 0;
         }
     }
@@ -155,8 +155,8 @@ function LeaderElection () {
             createNewNode();
             currentNodeLength++;
           } else {
-            // Removes the node with the smallest ID
-            const nodeToRemove = nodeArr.sort((a, b) => a.id - b.id).shift().hostname;
+            // Removes the node with the Highest ID
+            const nodeToRemove = nodeArr.sort((a, b) => a.id - b.id).pop().hostname;
             sendDeleteRequest(nodeToRemove);
             currentNodeLength--;
           }
