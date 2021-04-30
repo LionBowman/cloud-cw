@@ -1,5 +1,7 @@
 var amqp = require('amqplib/callback_api');
 var connectionString = 'amqp://user:bitnami@192.168.91.3:5672';
+var vmIP = '192.168.91.3';
+var url = (`http://${vmIP}:2375`);
 
 // Get the hostname of the node
 var os = require("os");
@@ -52,8 +54,6 @@ async function createNewNode() {
     Image: 'cloud-cw_node1',
     Hostname: 'newNode' + newNodeStartId,
   };
-
-var url = connectionString;
 
 // POST request to the Docker API for creating a new node
 var create = {
