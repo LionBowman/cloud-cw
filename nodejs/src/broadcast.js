@@ -178,10 +178,11 @@ function getNode () {
 
 // Adds a node that doesn't already exist into the node array
 function AddToArray(nodeToAdd) {
-  if(nodeArr.some(node => node.id == nodeToAdd.id))
-    return;
-  console.log("ADDING : ", nodeToAdd, " To Array")
-  nodeArr.push(nodeToAdd);
+  var nodeIndex = nodeArr.findIndex(node => node.id == nodeToAdd.id);
+  if(nodeIndex < 0)
+    nodeArr.push(nodeToAdd);
+  else 
+    nodeArr[nodeIndex] = nodeToAdd;
 }
 
 // Publish
