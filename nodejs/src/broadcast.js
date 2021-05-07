@@ -6,13 +6,11 @@ var url = (`http://${vmIP}:2375`);
 // Get the hostname of the node
 var os = require("os");
 var myhostname = os.hostname(); // Note: This may become the NodeID
-// var nodeNameFileChecked = false;
 // IP Address variable
 var defineAddr;
 
 // Gets the IP address of the node
 var ipaddr = require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-  console.log('Success - the addr: ' + add);
   defineAddr = add;
 })
 
@@ -31,13 +29,11 @@ var lastNewNodeCreationTime = Date.now();
 var nodeArr = [];
 // Timeout for dead node pruning
 const pruneTimeout = 30000;
-// Sets the node ID based on .. (ToDo: need to change to use date/time number as the ID)
+// Sets the node ID based on current date/time in milliseconds
 var nodeID = Date.now();
-//toSend = {"hostname" : myhostname, "status": "alive","nodeID":nodeID} ;
 
 // Removes dead nodes from the node array list
 function pruneDeadNodes() {
-  //console.log('CALLED: prune dead nodes'); // Debug
   var newNodeArr = [];
   nodeArr.forEach((node) => {
     if(node.lastAliveTime <= Date.now() - pruneTimeout)
@@ -118,8 +114,6 @@ request(create, function (error, response, createBody) {
 
 // Elect a leader - Check who is the leader
 function LeaderElection () {
-  //console.log('CALLED: leader election'); // Debug
-  console.log(nodeArr);
   var thisNode = getNode();
   leader = 1;
   activeNodes = 0;
@@ -146,11 +140,10 @@ function LeaderElection () {
       var timeAdjustedNodeCount = targetNodeCount;
       const date = new Date();
       // Service provision schedule - peak time specified as 17:00 ~ 22:00 (UTC)
-      if (date.getHours() > 14 && date.getHours() < 22) {
+      if (date.getHours() > 17 && date.getHours() < 22) {
         timeAdjustedNodeCount += 2;
       }
       while(currentNodeLength != timeAdjustedNodeCount) {
-          //console.log('IN LOOP!!!'); // Debug
           if(currentNodeLength < timeAdjustedNodeCount) {
             createNewNode();
             currentNodeLength++;
@@ -160,7 +153,6 @@ function LeaderElection () {
             sendDeleteRequest(nodeToRemove);
             currentNodeLength--;
           }
-          //console.log('Node array size = ', currentNodeLength); // Debug
       }
       lastNewNodeCreationTime = Date.now();
     }
