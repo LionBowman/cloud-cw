@@ -131,7 +131,7 @@ function LeaderElection () {
       systemLeader = 0;
     }
   });
-  console.log('am I the leader = ', systemLeader, ' node array size = ', nodeArr.length)
+  console.log('Am I the leader? :- ', systemLeader, ' Node array size = ', nodeArr.length)
   if(systemLeader) {
     // Checks to see if lastNewNodeCreationTime within the last 20 secs
     if(lastNewNodeCreationTime <= Date.now() - 20000) {
@@ -186,7 +186,6 @@ function getNode () {
 // Adds a node that doesn't already exist into the node array
 function AddToArray(nodeToAdd) {
   var nodeIndex = nodeArr.findIndex(node => node.id == nodeToAdd.id);
-  console.log('node index is : ', nodeIndex);
   if(nodeIndex < 0)
     nodeArr.push(nodeToAdd);
   else 
@@ -198,7 +197,6 @@ amqp.connect(connectionString, function (error0, connection) {
   if (error0) {
     throw error0;
   }
-  //console.log("we have a connection using: " + connectionString + "for " + myhostname)
   connection.createChannel(function (error1, channel) { });
 });
 
