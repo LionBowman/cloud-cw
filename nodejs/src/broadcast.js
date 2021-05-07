@@ -123,6 +123,7 @@ function LeaderElection () {
   var thisNode = getNode();
   leader = 1;
   activeNodes = 0;
+  const date = new Date();
   console.log('Date Hours = ', date.getHours(), ' : Is it within the time? =  ', (date.getHours() > 14 && date.getHours() < 22));
   pruneDeadNodes();
   nodeArr.forEach((node) => {
