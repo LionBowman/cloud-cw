@@ -1,5 +1,5 @@
 var amqp = require('amqplib/callback_api');
-var connectionString = 'amqp://user:bitnami@haproxy:5672';
+var connectionString = 'amqp://user:bitnami@192.168.91.3:5672';
 var vmIP = '192.168.91.3';
 var url = (`http://${vmIP}:2375`);
 
