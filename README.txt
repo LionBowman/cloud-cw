@@ -23,7 +23,7 @@ NOTE: The program seems to take quite a long time to initialse properly so pleas
 ----------
 
 Self Healing Feature - If you kill a node, a new one will be instantiated to bring the system back to its default 
-configuration (20 sec wait):
+configuration (30 sec wait before pruning a dead node from the array list and a 20 sec wait on node creation):
 
     -  sudo docker container ls 
     // Find the containerID of the one you want to remove
