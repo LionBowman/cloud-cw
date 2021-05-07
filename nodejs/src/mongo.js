@@ -25,31 +25,4 @@ var analyticsSchema = new Schema({
 
 var analyticsModel = mongoose.model('analytics', analyticsSchema, 'analytics');
 
-
-function getAll() { 
-  analyticsModel.find({}, 'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction', (err, analytics) => {
-    if(err) return err
-      console.log('Output of analytics before return: ' + analytics);
-      return analytics
-    })
-}
-
-// function getAll(req, res, next) {
-
-//   analyticsModel.find({}, 'accountId userName titleId userAction dateAndTime pointOfInteraction typeOfInteraction')
-//     .exec(function (err, analytics) {
-//       if (err) { return next(err); }
-//       //Successful, so render
-//       res.json(analytics);
-//     });
-// };
-
-function postAll(model) {
-  var new_analytics_instance = new analyticsModel(model)
-  new_analytics_instance.save(function (err) {
-  if (err) return err
-  return new_analytics_instance
-  });
-}
-
-module.exports = {getAll, postAll,analyticsModel}
+module.exports = {analyticsModel}

@@ -1,5 +1,5 @@
 var amqp = require('amqplib/callback_api');
-var connectionString = 'amqp://user:bitnami@192.168.91.3:5672';
+var connectionString = `amqp://user:bitnami@${vmIP}:5672`;
 var vmIP = '192.168.91.3';
 var url = (`http://${vmIP}:2375`);
 
@@ -37,7 +37,7 @@ var nodeID = Date.now();
 
 // Removes dead nodes from the node array list
 function pruneDeadNodes() {
-  console.log('CALLED: prune dead nodes'); // Debug
+  //console.log('CALLED: prune dead nodes'); // Debug
   var newNodeArr = [];
   nodeArr.forEach((node) => {
     if(node.lastAliveTime <= Date.now() - pruneTimeout)
@@ -118,12 +118,12 @@ request(create, function (error, response, createBody) {
 
 // Elect a leader - Check who is the leader
 function LeaderElection () {
-  console.log('CALLED: leader election'); // Debug
+  //console.log('CALLED: leader election'); // Debug
   console.log(nodeArr);
   var thisNode = getNode();
   leader = 1;
   activeNodes = 0;
-  pruneDeadNodes(); // Commented to test if the node array count stabilises
+  pruneDeadNodes();
   nodeArr.forEach((node) => {
     if (node.hostname != thisNode.hostname) {
         activeNodes++;
@@ -135,22 +135,22 @@ function LeaderElection () {
       systemLeader = 1;
     } else {
       systemLeader = 0;
-      //console.log("I'm NOT the leader, it is now", node.hostname, " with ", node.id)
     }
   });
   console.log('am I the leader = ', systemLeader, ' node array size = ', nodeArr.length)
   if(systemLeader) {
     // Checks to see if lastNewNodeCreationTime within the last 20 secs or undefined ?
     if(lastNewNodeCreationTime <= Date.now() - 20000) {
-      //Create a new node while there are less than 3 nodes in the array list
+      // Create a new node while there are less than 3 nodes in the array list
       var currentNodeLength = nodeArr.length;
       var timeAdjustedNodeCount = targetNodeCount;
       const date = new Date();
+      // Service provision schedule - peak time specified as 17:00 ~ 22:00 (UTC)
       if (date.getHours() > 17 && date.getHours() < 22) {
         timeAdjustedNodeCount += 2;
       }
-      while(currentNodeLength != timeAdjustedNodeCount) {  // HERE: the issue lies with this loop as lastNewNodeCreationTime starts as undefined
-          console.log('IN LOOP!!!'); // Debug
+      while(currentNodeLength != timeAdjustedNodeCount) {
+          //console.log('IN LOOP!!!'); // Debug
           if(currentNodeLength < timeAdjustedNodeCount) {
             createNewNode();
             currentNodeLength++;
@@ -160,23 +160,13 @@ function LeaderElection () {
             sendDeleteRequest(nodeToRemove);
             currentNodeLength--;
           }
-          console.log('Node array size = ', currentNodeLength); // Debug
+          //console.log('Node array size = ', currentNodeLength); // Debug
       }
-        // var interval = setInterval(function() {
-        //   if (nodeArr.length < minNodeCount) {
-        //     console.log('IN LOOP!!!'); // Debug
-        //     createNewNode()
-        //     console.log('EXITING LOOP!!!'); // Debug
-        //   } else {
-        //     clearInterval(interval);
-        //   }
-        // }, 3000);
-      //console.log('Last new node creation time is : ', lastNewNodeCreationTime);
       lastNewNodeCreationTime = Date.now();
     }
   }
 };
-
+// Request for removing a node
 function sendDeleteRequest (nodeName) {
   var deleteReq = {
     uri: `${url}/v1.40/containers/${nodeName}?force=true`,
