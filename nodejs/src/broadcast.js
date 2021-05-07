@@ -146,7 +146,7 @@ function LeaderElection () {
       var timeAdjustedNodeCount = targetNodeCount;
       const date = new Date();
       // Service provision schedule - peak time specified as 17:00 ~ 22:00 (UTC)
-      if (date.getHours() > 17 && date.getHours() < 22) {
+      if (date.getHours() > 14 && date.getHours() < 22) {
         timeAdjustedNodeCount += 2;
       }
       while(currentNodeLength != timeAdjustedNodeCount) {
