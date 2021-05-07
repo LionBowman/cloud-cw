@@ -123,6 +123,7 @@ function LeaderElection () {
   var thisNode = getNode();
   leader = 1;
   activeNodes = 0;
+  console.log('Date Hours = ', date.getHours(), ' : Is it within the time? =  ', (date.getHours() > 14 && date.getHours() < 22));
   pruneDeadNodes();
   nodeArr.forEach((node) => {
     if (node.hostname != thisNode.hostname) {
@@ -139,7 +140,7 @@ function LeaderElection () {
   });
   console.log('am I the leader = ', systemLeader, ' node array size = ', nodeArr.length)
   if(systemLeader) {
-    // Checks to see if lastNewNodeCreationTime within the last 20 secs or undefined ?
+    // Checks to see if lastNewNodeCreationTime within the last 20 secs
     if(lastNewNodeCreationTime <= Date.now() - 20000) {
       // Create a new node while there are less than 3 nodes in the array list
       var currentNodeLength = nodeArr.length;
