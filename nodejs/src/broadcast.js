@@ -5,7 +5,7 @@ var url = (`http://${vmIP}:2375`);
 
 // Get the hostname of the node
 var os = require("os");
-var myhostname = os.hostname(); // Note: This may become the NodeID
+var myhostname = os.hostname();
 // IP Address variable
 var defineAddr;
 
